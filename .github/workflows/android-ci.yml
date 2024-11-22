@@ -1,4 +1,4 @@
-name: Android CI
+name: Generated APK AAB (Upload - Create Artifact To Github Action)
 
 env:
   # The name of the main module repository
@@ -8,11 +8,10 @@ env:
   playstore_name: Frogobox ID
 
 on:
-  # Triggers the workflow on push or pull request events but only for default and protected branches
+
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - 'release/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,7 +30,7 @@ jobs:
 
       # Set Repository Name As Env Variable
       - name: Set repository name as env variable
-        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        run: echo "repository_name=$(echo '$' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
       - name: Set Up JDK
         uses: actions/setup-java@v4
@@ -50,3 +49,38 @@ jobs:
       # Run Build Project
       - name: Build gradle project
         run: ./gradlew build
+
+      # Create APK Debug
+      - name: Build apk debug project (APK) - $ module
+        run: ./gradlew assembleDebug
+
+      # Create APK Release
+      - name: Build apk release project (APK) - $ module
+        run: ./gradlew assemble
+
+      # Create Bundle AAB Release
+      # Noted for main module build [main_project_module]:bundleRelease
+      - name: Build app bundle release (AAB) - $ module
+        run: ./gradlew $:bundleRelease
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK Debug - $
+        uses: actions/upload-artifact@v4
+        with:
+          name: $ - $ - $ - APK(s) debug generated
+          path: $/build/outputs/apk/debug/
+
+      # Noted For Output [main_project_module]/build/outputs/apk/release/
+      - name: Upload APK Release - $
+        uses: actions/upload-artifact@v4
+        with:
+          name: $ - $ - $ - APK(s) release generated
+          path: $/build/outputs/apk/release/
+
+      # Noted For Output [main_project_module]/build/outputs/bundle/release/
+      - name: Upload AAB (App Bundle) Release - $
+        uses: actions/upload-artifact@v4
+        with:
+          name: $ - $ - $ - App bundle(s) AAB release generated
+          path: $/build/outputs/bundle/release/
