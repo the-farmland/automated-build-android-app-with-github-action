@@ -16,7 +16,7 @@ object ProjectSetting {
     // ---------------------------------------------------------------------------------------------
 
     // Declaration app name
-    const val NAME_APP = "Github Action Automated"
+    const val NAME_APP = "Github ACTION Automated"
 
     const val APP_DOMAIN = "com"
     const val APP_PLAY_CONSOLE = "frogobox"
